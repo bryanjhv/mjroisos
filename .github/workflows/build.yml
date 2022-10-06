@@ -1,0 +1,39 @@
+on: workflow_dispatch
+jobs:
+  prepare:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: styfle/cancel-workflow-action@0.10.1
+      - id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          format: YYYYMMDD-HHmmss
+    outputs:
+      tag: ${{ steps.time.outputs.time }}
+  release:
+    needs: prepare
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        edition:
+          - gnome
+          - kde
+          - xfce
+    steps:
+      - uses: styfle/cancel-workflow-action@0.10.1
+      - id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          format: YY.MM
+      - uses: manjaro/manjaro-iso-action@main
+        with:
+          kernel: linux519
+          code-name: Custom
+          edition: ${{ matrix.edition }}
+          version: ${{ steps.time.outputs.time }}
+          release-tag: ${{ needs.prepare.outputs.tag }}
+      - if: ${{ failure() || cancelled() }}
+        run: |
+          echo ${{ github.token }} | gh auth login --with-token
+          gh release delete ${{ needs.prepare.outputs.tag }} -y --repo ${{ github.repository }}
+          git push --delete origin ${{ needs.prepare.outputs.tag }}
