@@ -27,7 +27,7 @@ jobs:
           format: YY.MM
       - uses: manjaro/manjaro-iso-action@main
         with:
-          kernel: linux519
+          kernel: linux60
           code-name: Custom
           edition: ${{ matrix.edition }}
           version: ${{ steps.time.outputs.time }}
