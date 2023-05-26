@@ -5,7 +5,7 @@ jobs:
     steps:
       - uses: styfle/cancel-workflow-action@0.11.0
       - id: time
-        uses: nanzm/get-time-action@v1.1
+        uses: nanzm/get-time-action@v2.0
         with:
           format: YYYYMMDD-HHmmss
     outputs:
@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: styfle/cancel-workflow-action@0.11.0
       - id: time
-        uses: nanzm/get-time-action@v1.1
+        uses: nanzm/get-time-action@v2.0
         with:
           format: YY.MM
       - uses: manjaro/manjaro-iso-action@main
